@@ -10,11 +10,16 @@ let resetButton = document.querySelector(".reset");
 //let sbutton = document.querySelector("#playerSubmit");
 const turnDiv = document.getElementById("currentPlayer");
 let turnPlayer = 0;
+let gameStatus = true;
 board.addEventListener("click", (e) => {
   let selection = e.target.innerHTML;
   let position = e.target.id.split("");
 
-  if (turnPlayer === 0 && selection === "") {
+  if (gameStatus === false){
+    return
+  }
+
+  if (turnPlayer === 0 && selection === "" && gameStatus) {
     e.target.innerHTML = "X";
     my_arr[position[0]][position[1]] = "X";
     turnPlayer++;
@@ -53,6 +58,16 @@ export const Checker = (matrix) => {
 
 export const Winner = (type) => {
     document.getElementById('winner').innerHTML = `Congratulations ${type} Got the W`
+    gameStatus = false;
+}
+
+export const Draw = () => {
+    const isBoardFull = my_arr.every(row => row.every(cell => cell !== null));
+    
+    if (isBoardFull && gameStatus) {
+        document.getElementById('winner').innerHTML = "It's a Draw!";
+        gameStatus = false;
+    }
 }
 
 function findWinner() {
@@ -68,6 +83,7 @@ function findWinner() {
     console.log("O is the winner");
     Winner('O')
   }
+  Draw();
 }
 
 resetButton.addEventListener("click", (e) => {
@@ -84,6 +100,7 @@ resetButton.addEventListener("click", (e) => {
   
   // Reset turn counter
   turnPlayer = 0;
+  gameStatus = true;
 });
 
 
